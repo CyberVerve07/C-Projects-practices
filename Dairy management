@@ -1,0 +1,221 @@
+#include <iostream>
+#include <string>
+#include <ctime>
+#include <cstdlib>
+
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
+using namespace std;
+
+/* -------------------- CONSTANTS -------------------- */
+const int ADMIN_PASSWORD = 3003;
+const double FAT_RATE = 6.43;
+
+/* -------------------- UTILITIES -------------------- */
+void clearScreen() {
+#ifdef _WIN32
+    system("cls");
+#else
+    system("clear");
+#endif
+}
+
+void pause() {
+#ifdef _WIN32
+    Sleep(1200);
+#endif
+}
+
+/* -------------------- DATA MODELS -------------------- */
+class MilkEntry {
+public:
+    string name;
+    int customerNo;
+    string session;
+    double milkLitres;
+    int fat;
+
+    void input() {
+        cout << "\nEnter Name (no spaces): ";
+        cin >> name;
+        cout << "Enter Customer No: ";
+        cin >> customerNo;
+        cout << "Enter Session (Morning/Evening): ";
+        cin >> session;
+        cout << "Enter Milk (litres): ";
+        cin >> milkLitres;
+        cout << "Enter Fat: ";
+        cin >> fat;
+    }
+
+    void printBill() const {
+        double total = milkLitres * fat * FAT_RATE;
+
+        clearScreen();
+        cout << "\n\t========== SUNITA MILK DAIRY ==========\n";
+        cout << "\tName: " << name << "\n";
+        cout << "\tCustomer No: " << customerNo << "\n";
+        cout << "\tSession: " << session << "\n";
+        cout << "\tMilk: " << milkLitres << " L\n";
+        cout << "\tFat: " << fat << "\n";
+        cout << "\t--------------------------------------\n";
+        cout << "\tTotal Amount: " << total << " Rs\n";
+        cout << "\t======================================\n";
+    }
+};
+
+/* -------------------- LOGIN -------------------- */
+bool login(string &user) {
+    int password;
+
+    cout << "\n========== LOGIN ==========\n";
+    cout << "Username: ";
+    cin >> user;
+    cout << "Password: ";
+    cin >> password;
+
+    if (password == ADMIN_PASSWORD) {
+        cout << "\nLogin successful...\n";
+        pause();
+        return true;
+    }
+
+    cout << "\nInvalid password!\n";
+    pause();
+    return false;
+}
+
+/* -------------------- FEATURES -------------------- */
+void milkDeposit() {
+    MilkEntry entry;
+    int animal;
+
+    clearScreen();
+    cout << "\n1. Buffalo\n2. Cow\nChoose Animal: ";
+    cin >> animal;
+
+    if (animal != 1 && animal != 2) {
+        cout << "Invalid choice!\n";
+        pause();
+        return;
+    }
+
+    entry.input();
+    entry.printBill();
+    pause();
+}
+
+void animalMeal() {
+    int choice, qty;
+    int price = 0;
+
+    clearScreen();
+    cout << "\n1. Animal Meal (1100 Rs)\n";
+    cout << "2. Bhusa (1000 Rs)\n";
+    cout << "3. Milk Growth Product (350 Rs)\n";
+    cout << "Select: ";
+    cin >> choice;
+
+    if (choice == 1) price = 1100;
+    else if (choice == 2) price = 1000;
+    else if (choice == 3) price = 350;
+    else {
+        cout << "Invalid option\n";
+        pause();
+        return;
+    }
+
+    cout << "Quantity: ";
+    cin >> qty;
+
+    cout << "\nTotal Bill: " << price * qty << " Rs\n";
+    pause();
+}
+
+void loanCalculator() {
+    int option;
+    long long principal, tenure;
+    int rate;
+
+    clearScreen();
+    cout << "\n1. Home Loan (12%)\n";
+    cout << "2. Car Loan (10%)\n";
+    cout << "3. Agriculture Loan (7%)\n";
+    cout << "Choose: ";
+    cin >> option;
+
+    if (option == 1) rate = 12;
+    else if (option == 2) rate = 10;
+    else if (option == 3) rate = 7;
+    else {
+        cout << "Invalid choice\n";
+        pause();
+        return;
+    }
+
+    cout << "Loan Amount: ";
+    cin >> principal;
+    cout << "Tenure (years): ";
+    cin >> tenure;
+
+    long long interest = (principal * rate * tenure) / 100;
+    long long total = principal + interest;
+    long long emi = total / (tenure * 12);
+
+    cout << "\nInterest: " << interest << " Rs\n";
+    cout << "Total Due: " << total << " Rs\n";
+    cout << "Monthly EMI: " << emi << " Rs\n";
+    pause();
+}
+
+void aboutDairy() {
+    clearScreen();
+    cout << "\nSUNITA Milk Dairy\n";
+    cout << "Quality milk and dairy products.\n";
+    cout << "Trusted by farmers and customers.\n";
+    pause();
+}
+
+/* -------------------- MENU -------------------- */
+void menu(const string &user) {
+    int choice;
+
+    while (true) {
+        clearScreen();
+        time_t now = time(nullptr);
+
+        cout << "\nWelcome, " << user << "\n";
+        cout << ctime(&now);
+        cout << "\n1. Deposit Milk";
+        cout << "\n2. Animal Meal";
+        cout << "\n3. Loan";
+        cout << "\n4. About";
+        cout << "\n5. Logout\n";
+        cout << "Choose: ";
+        cin >> choice;
+
+        switch (choice) {
+        case 1: milkDeposit(); break;
+        case 2: animalMeal(); break;
+        case 3: loanCalculator(); break;
+        case 4: aboutDairy(); break;
+        case 5: return;
+        default:
+            cout << "Invalid option\n";
+            pause();
+        }
+    }
+}
+
+/* -------------------- MAIN -------------------- */
+int main() {
+    string user;
+
+    while (!login(user));
+
+    menu(user);
+    cout << "\nThank you for using SUNITA Milk Dairy.\n";
+    return 0;
+}
