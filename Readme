@@ -1,0 +1,40 @@
+
+For a **very simple, clean, beginner-level README**, use this. Nothing extra.
+
+---
+
+# SUNITA Milk Dairy (C++)
+
+A simple **console-based C++ project** for managing basic milk dairy operations.
+
+## Features
+
+* Login system
+* Milk deposit & bill calculation
+* Animal meal purchase
+* Loan calculator
+* Menu-driven interface
+
+## Technology
+
+* C++
+* Console application
+
+## How to Run
+
+```bash
+g++ main.cpp -o dairy
+./dairy
+```
+
+## Login
+
+```
+Password: 3003
+```
+
+## Purpose
+
+This project is made for **learning C++ basics and OOP concepts**.
+
+
